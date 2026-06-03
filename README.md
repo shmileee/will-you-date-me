@@ -87,15 +87,11 @@ npm run format      # Prettier --write
 
 ## Getting notified when she fills the form 📲
 
-When Katya fills in date + time + food and hits **"Це воно! →"**, the app sends you a notification with everything she picked. Pick one of three delivery options below. Set the corresponding values as **repository secrets** (Settings → Secrets and variables → Actions → New secret) so they're injected at build time but never committed.
+When Katya fills in date + time + food and hits **"Це воно! →"**, the app sends a Telegram message with everything she picked. ~3 minutes to set up.
 
-The app uses whichever you configure first in this order: **Telegram → ntfy → Discord**. If none are set, the form still works — it just doesn't notify anyone.
+> ⚠️ The bot token is embedded in the JS bundle (it's a static site). For personal use this is fine. Revoke the bot via @BotFather if abused.
 
-> ⚠️ All three approaches embed the secret in the JS bundle (it's a static site). For personal use this is fine. If the secret ever gets abused, regenerate it (any of these services support that).
-
-### Option A: Telegram bot (recommended)
-
-Push notification straight to your phone. ~3 minutes to set up.
+### Setup
 
 1. In Telegram, talk to [@BotFather](https://t.me/BotFather) → `/newbot` → follow prompts → copy the HTTP API **token**.
 2. Send any message to your new bot from your Telegram account.
@@ -106,28 +102,18 @@ Push notification straight to your phone. ~3 minutes to set up.
 
 Done. Next push to `main` rebuilds with Telegram enabled.
 
-### Option B: ntfy.sh (zero signup)
-
-Push notifications to your phone via the free [ntfy.sh](https://ntfy.sh) service. No account needed.
-
-1. Pick a long random string for the topic (e.g. `katya-date-d8f3a1b7c2e9`). This **is** the secret — whoever knows it can post/receive.
-2. Install the ntfy app on your phone → subscribe to that topic.
-3. Repo secret: `NTFY_TOPIC` = your chosen topic.
-
-### Option C: Discord webhook
-
-If you live in Discord. Set up an incoming webhook in your server (Server Settings → Integrations → Webhooks → New webhook) and add `DISCORD_WEBHOOK` as a repo secret with the full webhook URL.
+If neither secret is set, the form still works — submitting just falls back to a `console.info` log instead of sending.
 
 ### Testing locally
 
-Copy `.env.example` to `.env` and fill in any of the same values (with the `VITE_` prefix) to test from `npm run dev`. The `.env` file is gitignored.
-
 ```bash
 cp .env.example .env
-# edit .env with your real token/chat-id
+# edit .env with your real VITE_TG_BOT_TOKEN / VITE_TG_CHAT_ID
 npm run dev
 # fill out the form, watch your phone
 ```
+
+The `.env` file is gitignored.
 
 ## Production preview (with SPA fallback)
 
@@ -178,14 +164,13 @@ Just push to `main`. The workflow in `.github/workflows/deploy.yml` runs typeche
 - **Tailwind 3.4** with HSL CSS variables for the pink/lavender/cream palette
 - **wouter** — 2 KB router (instead of react-router)
 - **motion** (formerly framer-motion) — petal/heart drift + page transitions
-- **vitest + @testing-library/react** — 38 tests
+- **vitest + @testing-library/react** — 32 tests
 - **ESLint 9 (flat config) + Prettier**
 
 ## Tests
 
-`npm test` runs the full suite. Currently 38 tests across 8 files:
+`npm test` runs the full suite. Currently 32 tests across 7 files:
 
-- `randomPosition` (pure logic) — 6
 - `SwappableImage` (image fallback) — 6
 - `EscapingNoButton` (pointer + touch + keyboard) — 7
 - `HomePage` — 4
@@ -196,7 +181,7 @@ Just push to `main`. The workflow in `.github/workflows/deploy.yml` runs typeche
 
 ## Reduced motion
 
-If the user has `prefers-reduced-motion: reduce` set in their OS, petals/hearts/page-transitions all simplify, and the No-button does a tiny fixed nudge instead of teleporting. Respect, etc.
+If the user has `prefers-reduced-motion: reduce` set in their OS, petals/hearts/page-transitions all simplify, and the No-button does a small fixed nudge away from the cursor instead of teleporting to the far corner. Respect, etc.
 
 ## License
 

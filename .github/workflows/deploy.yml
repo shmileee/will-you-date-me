@@ -46,8 +46,6 @@ jobs:
         env:
           VITE_TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           VITE_TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          VITE_NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-          VITE_DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: npm run build
 
       - name: Verify CNAME and 404.html present
