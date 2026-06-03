@@ -18,11 +18,21 @@ const TG_CHAT_ID = (import.meta.env.VITE_TG_CHAT_ID as string | undefined)?.trim
 const NTFY_TOPIC = (import.meta.env.VITE_NTFY_TOPIC as string | undefined)?.trim();
 const DISCORD_WEBHOOK = (import.meta.env.VITE_DISCORD_WEBHOOK as string | undefined)?.trim();
 
+const WEEKDAYS_UK = ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'] as const;
+
+function formatDateUk(iso: string): string {
+  const d = new Date(`${iso}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return iso;
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  return `${day}.${month}.${d.getFullYear()} (${WEEKDAYS_UK[d.getDay()]})`;
+}
+
 function formatMessage(plan: DatePlan): string {
   return [
     '🌸 Катя сказала ТАК! 🌸',
     '',
-    `📅 День: ${plan.date}`,
+    `📅 День: ${formatDateUk(plan.date)}`,
     `⏰ Час: ${plan.timeLabel}`,
     `${plan.foodEmoji} Їжа: ${plan.foodLabel}`,
     '',
