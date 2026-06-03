@@ -17,7 +17,8 @@ export function DatePage() {
       return;
     }
     setError('');
-    setLocation('/food');
+    const params = new URLSearchParams({ d: date, t: time });
+    setLocation(`/food?${params.toString()}`);
   };
 
   const inputBase =

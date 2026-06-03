@@ -7,6 +7,11 @@ coverage
 .vite
 .eslintcache
 
+# Env files (notification secrets)
+.env
+.env.local
+.env.*.local
+
 # TypeScript build artifacts
 *.tsbuildinfo
 src/**/*.js

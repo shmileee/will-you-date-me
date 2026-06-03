@@ -25,7 +25,7 @@ export function HomePage() {
         <Button variant="primary" onClick={handleYes} className="z-10">
           {strings.home.yes}
         </Button>
-        <div ref={buttonRowRef} className="relative h-14 w-36 sm:h-16 sm:w-44">
+        <div ref={buttonRowRef} className="relative h-20 w-48 sm:h-24 sm:w-96">
           <EscapingNoButton label={strings.home.no} containerRef={buttonRowRef} />
         </div>
       </div>

@@ -5,10 +5,40 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { strings, type FoodKey } from '@/content/strings';
 import { cn } from '@/lib/cn';
+import { sendDateProposal } from '@/lib/notify';
+
+function readQuery() {
+  if (typeof window === 'undefined') return { date: '', time: '' };
+  const params = new URLSearchParams(window.location.search);
+  return { date: params.get('d') ?? '', time: params.get('t') ?? '' };
+}
 
 export function FoodPage() {
   const [, setLocation] = useLocation();
   const [selected, setSelected] = useState<FoodKey | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleConfirm = async () => {
+    if (!selected || submitting) return;
+    setSubmitting(true);
+    const { date, time } = readQuery();
+    const food = strings.food.options.find((o) => o.key === selected);
+    const timeSlot = strings.date.times.find((t) => t.value === time);
+    if (food && date && timeSlot) {
+      const result = await sendDateProposal({
+        date,
+        timeValue: timeSlot.value,
+        timeLabel: timeSlot.label,
+        foodKey: food.key,
+        foodEmoji: food.emoji,
+        foodLabel: food.label,
+      });
+      if (!result.ok) {
+        console.error('[notify] failed:', result.error);
+      }
+    }
+    setLocation('/letter');
+  };
 
   return (
     <Card className="text-center">
@@ -53,7 +83,7 @@ export function FoodPage() {
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.2 }}
           >
-            <Button variant="primary" size="full" onClick={() => setLocation('/letter')}>
+            <Button variant="primary" size="full" onClick={handleConfirm} disabled={submitting}>
               {strings.food.confirm}
             </Button>
           </motion.div>

@@ -29,6 +29,9 @@ function rectToBounds(rect: DOMRect): Bounds {
   return { minX: 0, maxX: rect.width, minY: 0, maxY: rect.height };
 }
 
+const PROXIMITY_THRESHOLD_PX = 100;
+const PROXIMITY_COOLDOWN_MS = 120;
+
 export function EscapingNoButton({
   label,
   containerRef,
@@ -58,6 +61,32 @@ export function EscapingNoButton({
       return randomPosition({ prev, bounds, size, prefersReducedMotion });
     });
   }, [computeBounds, prefersReducedMotion]);
+
+  const dodgeRef = useRef(dodge);
+  useEffect(() => {
+    dodgeRef.current = dodge;
+  }, [dodge]);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    let lastDodgeAt = 0;
+    const onPointerMove = (event: globalThis.PointerEvent) => {
+      const btn = buttonRef.current;
+      if (!btn) return;
+      const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+      if (now - lastDodgeAt < PROXIMITY_COOLDOWN_MS) return;
+      const rect = btn.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
+      if (distance < PROXIMITY_THRESHOLD_PX) {
+        dodgeRef.current();
+        lastDodgeAt = now;
+      }
+    };
+    document.addEventListener('pointermove', onPointerMove, { passive: true });
+    return () => document.removeEventListener('pointermove', onPointerMove);
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
     setPos((prev) => {
@@ -94,7 +123,7 @@ export function EscapingNoButton({
       )}
       style={{ left: 0, top: 0, touchAction: 'manipulation' }}
       animate={{ x: pos.x, y: pos.y }}
-      transition={{ type: 'spring', stiffness: 600, damping: 30 }}
+      transition={{ type: 'spring', stiffness: 900, damping: 26 }}
       onPointerEnter={handlePointerEnter}
       onTouchStart={handleTouchStart}
       onKeyDown={handleKeyDown}
