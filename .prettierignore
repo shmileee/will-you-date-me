@@ -1,0 +1,7 @@
+node_modules
+dist
+coverage
+.vite
+.reference-screenshots
+.playwright-mcp
+package-lock.json

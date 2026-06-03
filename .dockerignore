@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.github
+.vscode
+.idea
+*.log
+.DS_Store
+.env*
+.reference-screenshots
+.playwright-mcp
+README.md
+*.md
+coverage
