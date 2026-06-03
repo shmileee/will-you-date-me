@@ -164,20 +164,20 @@ Just push to `main`. The workflow in `.github/workflows/deploy.yml` runs typeche
 - **Tailwind 3.4** with HSL CSS variables for the pink/lavender/cream palette
 - **wouter** — 2 KB router (instead of react-router)
 - **motion** (formerly framer-motion) — petal/heart drift + page transitions
-- **vitest + @testing-library/react** — 32 tests
+- **vitest + @testing-library/react** — 37 tests
 - **ESLint 9 (flat config) + Prettier**
 
 ## Tests
 
-`npm test` runs the full suite. Currently 32 tests across 7 files:
+`npm test` runs the full suite. Currently 37 tests across 7 files:
 
-- `SwappableImage` (image fallback) — 6
+- `SwappableImage` (image config) — 6
 - `EscapingNoButton` (pointer + touch + keyboard) — 7
 - `HomePage` — 4
 - `YayPage` — 2
 - `DatePage` (validation) — 5
-- `FoodPage` (single-select) — 5
-- `LetterPage` — 3
+- `FoodPage` (single-select, query-param guard, radiogroup a11y) — 8
+- `LetterPage` (reactive ?t time substitution) — 5
 
 ## Reduced motion
 

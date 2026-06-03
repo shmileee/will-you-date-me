@@ -38,7 +38,10 @@ function formatMessage(plan: DatePlan): string {
   ].join('\n');
 }
 
-export async function sendDateProposal(plan: DatePlan): Promise<NotifyResult> {
+export async function sendDateProposal(
+  plan: DatePlan,
+  signal?: AbortSignal,
+): Promise<NotifyResult> {
   const text = formatMessage(plan);
 
   if (!TG_BOT_TOKEN || !TG_CHAT_ID) {
@@ -57,6 +60,7 @@ export async function sendDateProposal(plan: DatePlan): Promise<NotifyResult> {
         text,
         disable_web_page_preview: true,
       }),
+      signal,
     });
     if (!res.ok) {
       return { ok: false, configured: true, error: `HTTP ${res.status}: ${await res.text()}` };

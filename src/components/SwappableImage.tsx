@@ -4,13 +4,13 @@ import { cn } from '@/lib/cn';
 
 interface SwappableImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> {
   name: ImageName;
-  /** Override the default alt text from the registry. */
   alt?: string;
 }
 
 export function SwappableImage({ name, alt, className, ...rest }: SwappableImageProps) {
   const entry = images[name];
-  const [src, setSrc] = useState<string>(entry.local);
+  const initialSrc = entry.local ? entry.local : entry.remote;
+  const [src, setSrc] = useState<string>(initialSrc);
   const [failed, setFailed] = useState(false);
 
   return (
@@ -22,8 +22,10 @@ export function SwappableImage({ name, alt, className, ...rest }: SwappableImage
       decoding="async"
       onError={() => {
         if (failed) return;
-        setFailed(true);
-        setSrc(entry.remote);
+        if (entry.local && src === entry.local) {
+          setFailed(true);
+          setSrc(entry.remote);
+        }
       }}
       {...rest}
     />

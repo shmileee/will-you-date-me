@@ -1,21 +1,42 @@
 # Photos / GIFs
 
-This folder is where you drop your own images to replace the default GIFs.
+Drop a personal photo or GIF here to replace one of the defaults.
 
 ## How it works
 
-Each `<SwappableImage name="..." />` first tries to load the local file at `/images/<name>`. If missing, it falls back to the remote URL listed in `src/content/images.ts`.
+Each `<SwappableImage>` is configured in [`src/content/images.ts`](../../src/content/images.ts). Each entry has a `local` field and a `remote` field. By default `local` is empty (`''`), so the page loads the `remote` URL directly — no broken-image flash, no extra request.
 
-To swap an image: drop a file here with one of these names. Any image format works (the browser handles the rest).
+To use a local photo:
 
-| File to drop here                    | Where it shows                 |
-| ------------------------------------ | ------------------------------ |
-| `cat.gif` (or `.jpg`/`.png`/`.webp`) | `/` — the home page question   |
-| `spongebob.gif`                      | `/yay` — the surprise reaction |
-| `shrek.gif`                          | `/letter` — the final letter   |
+1. Drop the file in this folder. Pick any name and any extension (e.g. `cat-katya.jpg`, `our-photo.png`, `dance.gif`).
+2. Open `src/content/images.ts` and set the corresponding entry's `local` field to that path, e.g.:
 
-> **Tip:** Square or near-square photos look best. Animated GIFs work great. If you want, you can replace just one — the others will keep using the default GIFs.
+   ```ts
+   catGif: {
+     local: '/images/cat-katya.jpg',  // ← edit this
+     remote: 'https://media.giphy.com/...',
+     alt: 'Милий котик',
+   },
+   ```
 
-## Want to change the alt text too?
+3. Commit, push. The next deploy will serve your image.
 
-Open `src/content/images.ts` and edit the `alt` field for that entry. Alt text shows when the image fails to load and is read by screen readers.
+If the local file is ever missing on a deploy, the page seamlessly falls back to `remote`.
+
+## Image registry
+
+| Entry          | Where it shows                 |
+| -------------- | ------------------------------ |
+| `catGif`       | `/` — the home page question   |
+| `spongebobGif` | `/yay` — the surprise reaction |
+| `shrekGif`     | `/letter` — the final letter   |
+
+## Tips
+
+- Square or near-square crops look best.
+- Animated GIFs work great.
+- You can replace just one entry; the others keep their defaults.
+
+## Want to change the alt text?
+
+Edit the `alt` field for that entry in `src/content/images.ts`. Alt text is read by screen readers and shows if the image fails to load.
