@@ -37,7 +37,10 @@ export function FoodPage() {
         console.error('[notify] failed:', result.error);
       }
     }
-    setLocation('/letter');
+    const letterParams = new URLSearchParams();
+    if (time) letterParams.set('t', time);
+    const qs = letterParams.toString();
+    setLocation(qs ? `/letter?${qs}` : '/letter');
   };
 
   return (
